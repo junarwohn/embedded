@@ -1,0 +1,55 @@
+
+semi.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text::
+
+00000000 <isr_vectors>:
+   0:	00 00 01 00 5d 00 00 00                             ....]...
+
+00000008 <semihost_call>:
+   8:	b480      	push	{r7}
+   a:	b083      	sub	sp, #12
+   c:	af00      	add	r7, sp, #0
+   e:	6078      	str	r0, [r7, #4]
+  10:	6039      	str	r1, [r7, #0]
+  12:	6878      	ldr	r0, [r7, #4]
+  14:	6839      	ldr	r1, [r7, #0]
+  16:	beab      	bkpt	0x00ab
+  18:	4603      	mov	r3, r0
+  1a:	4618      	mov	r0, r3
+  1c:	370c      	adds	r7, #12
+  1e:	46bd      	mov	sp, r7
+  20:	f85d 7b04 	ldr.w	r7, [sp], #4
+  24:	4770      	bx	lr
+  26:	bf00      	nop
+
+00000028 <main>:
+  28:	b590      	push	{r4, r7, lr}
+  2a:	b089      	sub	sp, #36	; 0x24
+  2c:	af00      	add	r7, sp, #0
+  2e:	f240 0368 	movw	r3, #104	; 0x68
+  32:	f2c0 0300 	movt	r3, #0
+  36:	f107 0410 	add.w	r4, r7, #16
+  3a:	cb0f      	ldmia	r3, {r0, r1, r2, r3}
+  3c:	c407      	stmia	r4!, {r0, r1, r2}
+  3e:	8023      	strh	r3, [r4, #0]
+  40:	2301      	movs	r3, #1
+  42:	607b      	str	r3, [r7, #4]
+  44:	f107 0310 	add.w	r3, r7, #16
+  48:	60bb      	str	r3, [r7, #8]
+  4a:	230e      	movs	r3, #14
+  4c:	60fb      	str	r3, [r7, #12]
+  4e:	1d3b      	adds	r3, r7, #4
+  50:	2005      	movs	r0, #5
+  52:	4619      	mov	r1, r3
+  54:	f7ff ffd8 	bl	8 <semihost_call>
+  58:	e7fe      	b.n	58 <main+0x30>
+  5a:	bf00      	nop
+
+0000005c <reset_handler>:
+  5c:	b580      	push	{r7, lr}
+  5e:	af00      	add	r7, sp, #0
+  60:	f7ff ffe2 	bl	28 <main>
+  64:	bd80      	pop	{r7, pc}
+  66:	bf00      	nop
